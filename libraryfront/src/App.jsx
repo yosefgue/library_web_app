@@ -1,10 +1,11 @@
 import './App.css'
-import { Button } from '@mantine/core';
+import Shell from "./layout/shell.jsx"
+
 
 function App() {
   return (
     <>
-      <Button variant="filled">Button</Button>
+    <Shell />
     </>
   )
 }

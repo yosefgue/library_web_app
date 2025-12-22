@@ -1,0 +1,39 @@
+.parent {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    border: 5px solid black;
+}
+.sidebar {
+    position: sticky;
+    display: flex;
+    height: 100%;
+    width: 200px;
+    justify-content: center;
+}
+.main {
+    flex: 1;
+    border: 2px solid black;
+}
+.logo {
+    height: 55px;
+    margin: 10px;
+    border: solid black 2px;
+}
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+    position: sticky;
+    height: 55px;
+    border: solid black 2px;
+    margin: 10px 20px;
+    align-items: center;
+}
+.searchbar {
+    max-width: 500px;
+    width: 100%;
+    border: solid black 2px;
+}
