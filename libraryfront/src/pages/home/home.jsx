@@ -24,9 +24,9 @@ function Header(){
                 </div>
             </div>
             <div className={styles.rightsection}>
-                <Anchor href="" underline="hover">Pricing</Anchor>
+                <Anchor href="/plan" underline="hover">Plan</Anchor>
                 <Anchor href="/signin" underline="hover">Sign In</Anchor>
-                <Button size="md" variant="filled">Sign Up</Button>
+                <Button component="a" href="/signup" size="md" variant="filled">Sign Up</Button>
             </div>
         </div>
     )

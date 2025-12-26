@@ -1,6 +1,7 @@
 import styles from "./signin.module.css"
-import { Button, Group, TextInput, PasswordInput, Anchor } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { Button, Group, TextInput, PasswordInput, Anchor, ActionIcon } from '@mantine/core';
+import { IconLogin2, IconArrowLeft } from '@tabler/icons-react';
+import { isNotEmpty, useForm } from '@mantine/form';
 
 export default function Signin(){
     const form = useForm({
@@ -12,13 +13,20 @@ export default function Signin(){
 
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      password: isNotEmpty('Password required'),
     },
   });
     return (
         <>
         <div className={styles.parent}>
-            <h1>Sign In</h1>
+            <ActionIcon component="a" href="/" className={styles.back} variant="outline" size="xl" aria-label="Settings">
+                <IconArrowLeft style={{ width: '70%', height: '70%' }} stroke={1.5} />
+            </ActionIcon>
             <form onSubmit={form.onSubmit((values) => console.log(values))} className={styles.form}>
+                <div className={styles.head}>
+                    <IconLogin2 size={45}/>
+                    <h1>Sign in</h1>
+                </div>
                 <TextInput
                     withAsterisk
                     label="Email"
@@ -27,8 +35,10 @@ export default function Signin(){
                     {...form.getInputProps('email')}
                 />
                 <PasswordInput
+                    withAsterisk
                     label="Password"
                     placeholder="********"
+                    {...form.getInputProps('password')}
                 />
                 <div className={styles.text}>
                     don't have an account? <Anchor href="/signup">Sign up</Anchor>

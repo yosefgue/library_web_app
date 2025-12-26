@@ -6,6 +6,8 @@ import '@mantine/core/styles.css';
 import './index.css'
 import Home from './pages/home/home.jsx'
 import Signin from './pages/signin/signin.jsx'
+import Signup from './pages/signup/signup.jsx'
+import Plan from './pages/plan/plan.jsx'
 
 let router = createBrowserRouter([
   {
@@ -16,6 +18,14 @@ let router = createBrowserRouter([
     path: "/signin",
     element: <Signin />,
   },
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
+    path: "/plan",
+    element: <Plan />,
+  }
 ]);
 
 createRoot(document.getElementById('root')).render(

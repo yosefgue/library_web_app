@@ -1,0 +1,65 @@
+.parent {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #f1f1f1;
+    gap: 20px
+}
+
+.head {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+
+}
+
+.head * {
+    text-align: center;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+}
+
+.back {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.price {
+    background-image: url('/images/hero.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    background-color: #f1f1f1;
+}
+.content {
+    margin-bottom: 20px;
+}
+
+.content div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+.premium {
+    background-image: url('/gradiant.jpg');
+    background-size: cover;
+    background-position: center;
+}
