@@ -1,11 +1,12 @@
 import styles from "./plan.module.css";
 import { Badge, Button, ActionIcon } from '@mantine/core';
 import { IconCheck, IconArrowLeft } from '@tabler/icons-react';
+import { Link } from "react-router-dom";
 
 export default function Plan() {
     return(
         <div className={styles.parent}>
-            <ActionIcon component="a" href="/" className={styles.back} variant="outline" size="xl" aria-label="Settings">
+            <ActionIcon component={Link} to="/" className={styles.back} variant="outline" size="xl" aria-label="Settings">
                 <IconArrowLeft style={{ width: '70%', height: '70%' }} stroke={1.5} />
             </ActionIcon>
             <div className={styles.container}>

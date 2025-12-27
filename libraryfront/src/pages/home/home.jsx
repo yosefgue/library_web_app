@@ -1,6 +1,7 @@
 import styles from "./home.module.css"
 import { IconSearch } from '@tabler/icons-react';
 import { TextInput, Button, Anchor } from '@mantine/core';
+import { Link } from "react-router-dom";
 
 export default function Home(){
     return (
@@ -24,9 +25,9 @@ function Header(){
                 </div>
             </div>
             <div className={styles.rightsection}>
-                <Anchor href="/plan" underline="hover">Plan</Anchor>
-                <Anchor href="/signin" underline="hover">Sign In</Anchor>
-                <Button component="a" href="/signup" size="md" variant="filled">Sign Up</Button>
+                <Anchor component={Link} to="/plan" underline="hover">Plan</Anchor>
+                <Anchor component={Link} to="/signin" underline="hover">Sign In</Anchor>
+                <Button component={Link} to="/signup" size="md" variant="filled">Sign Up</Button>
             </div>
         </div>
     )

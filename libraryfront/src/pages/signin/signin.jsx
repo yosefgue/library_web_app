@@ -2,6 +2,8 @@ import styles from "./signin.module.css"
 import { Button, Group, TextInput, PasswordInput, Anchor, ActionIcon } from '@mantine/core';
 import { IconLogin2, IconArrowLeft } from '@tabler/icons-react';
 import { isNotEmpty, useForm } from '@mantine/form';
+import { Link } from "react-router-dom";
+
 
 export default function Signin(){
     const form = useForm({
@@ -19,7 +21,7 @@ export default function Signin(){
     return (
         <>
         <div className={styles.parent}>
-            <ActionIcon component="a" href="/" className={styles.back} variant="outline" size="xl" aria-label="Settings">
+            <ActionIcon component={Link} to="/" className={styles.back} variant="outline" size="xl" aria-label="Settings">
                 <IconArrowLeft style={{ width: '70%', height: '70%' }} stroke={1.5} />
             </ActionIcon>
             <form onSubmit={form.onSubmit((values) => console.log(values))} className={styles.form}>
@@ -41,7 +43,7 @@ export default function Signin(){
                     {...form.getInputProps('password')}
                 />
                 <div className={styles.text}>
-                    don't have an account? <Anchor href="/signup">Sign up</Anchor>
+                    don't have an account? <Anchor component={Link} to="/signup">Sign up</Anchor>
                 </div>
 
                 <Group justify="flex-end" mt="md">
