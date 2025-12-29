@@ -2,23 +2,46 @@ import styles from "./signup.module.css"
 import { Button, Group, TextInput, PasswordInput, Anchor, ActionIcon } from '@mantine/core';
 import { IconUserPlus, IconArrowLeft } from '@tabler/icons-react';
 import { useForm, isNotEmpty } from '@mantine/form';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Signup(){
+    const navigate = useNavigate();
     const form = useForm({
-    mode: 'uncontrolled',
-    initialValues: {
-        username: '',
-        email: '',
-        password: '',
-    },
+        mode: 'uncontrolled',
+        initialValues: {
+            username: '',
+            email: '',
+            password: '',
+        },
 
-    validate: {
-        username: isNotEmpty('Username required'),
-        email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-        password: isNotEmpty('Password required'),
-    },
-  });
+        validate: {
+            username: isNotEmpty('Username required'),
+            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+            password: isNotEmpty('Password required'),
+        },
+    });
+
+    async function handleSignup(values){
+        try {
+            const res = await fetch("http://localhost:8000/api/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                body: JSON.stringify(values),
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(`Signup failed: ${data.error}`);
+            }
+            if (res.ok) {
+                navigate('/signin')
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
     return (
         <>
         <div className={styles.parent}>
@@ -60,25 +83,4 @@ export default function Signup(){
         </div>
         </>
     )
-}
-
-async function handleSignup(values){
-
-    try {
-        const res = await fetch("http://localhost:8000/api/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify(values),
-        });
-        if (!res.ok) {
-            throw new Error("Signup failed");
-        }
-        const data = await res.json();
-        console.log(data);
-    } catch (err) {
-    console.error(err.message)
-    }
 }
