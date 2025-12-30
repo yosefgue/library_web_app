@@ -9,7 +9,8 @@ import Home from './pages/home/home.jsx'
 import Signin from './pages/signin/signin.jsx'
 import Signup from './pages/signup/signup.jsx'
 import Plan from './pages/plan/plan.jsx'
-import { ProtectedRoute, App } from './App.jsx';
+import AppLayout from './applayout.jsx';
+import ProtectedRoute from './protected.jsx'
 import DashboardHome from './pages/dashboardhome/dashboardhome.jsx';
 
 
@@ -23,7 +24,7 @@ let router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        element: <App />,
+        element: <AppLayout />,
         children: [
           {index: true, element: <DashboardHome/>},
         ]

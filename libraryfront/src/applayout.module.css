@@ -1,0 +1,55 @@
+.parent {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.logo {
+    margin: 10px 0;
+    width: 50px;
+}
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    gap: 50px;
+    width: 250px;
+    height: 100%;
+}
+.sidebar a {
+    border-radius: 5px;
+    font-weight: 500;
+    transition: 0.1s ease-in-out;
+}
+.signout {
+    margin-top: auto;
+    width: 225px;
+    margin-bottom: 10px;
+    transition: 0.1s ease-in-out;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px 15px;
+}
+.useravatar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: rgb(47, 118, 218);
+}
+.searchbar {
+    flex: 1;
+    max-width: 500px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    background-color: rgb(244, 244, 244);
+}
