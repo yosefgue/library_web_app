@@ -5,6 +5,7 @@ import { Navigate, Outlet } from "react-router-dom";
 export default function ProtectedRoute() {
   const [status, setStatus ] = useState("loading");
   const [userdata, setUserdata] = useState(null);
+  const [booksdata, setBooksdata] = useState(null);
 
   useEffect(() => {
     async function checkAuth() {
@@ -25,6 +26,7 @@ export default function ProtectedRoute() {
         }
         const data = await res.json();
         setUserdata(data.user);
+        setBooksdata(data.books);
         setStatus("ok");
       } catch (err) {
         console.error(err.message);
@@ -35,6 +37,6 @@ export default function ProtectedRoute() {
 
     checkAuth();
     }, []);
-  if (status === "loading" || !userdata) return null;
-  return status === "ok" ? <Outlet context={{ userdata }} /> : <Navigate to="/signup" replace />;
+  if (status === "loading" || !userdata || !booksdata) return null;
+  return status === "ok" ? <Outlet context={{ userdata, booksdata }} /> : <Navigate to="/signup" replace />;
 }

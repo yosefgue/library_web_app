@@ -1,0 +1,90 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.bookcard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 170px;
+    height: 270px;
+    gap: 5px;
+    transition: transform 0.2s ease;
+}
+.bookcard img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.bookcard p {
+    width: 150px;
+    display: -webkit-box;
+    display: box;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    overflow: hidden;
+    font-size: 14px;
+    text-align: center;
+}
+.books {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+.booksection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.bookcard:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+.sectiontitle {
+    font-weight: 700;
+}
+
+.modalcontainer {
+    display: flex;
+    flex-direction: column;
+}
+.modalhead {
+    display: flex;
+    flex-direction: row;
+}
+.modalhead img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.imgcontainer {
+    width: 1000px;
+}
+
+.modalcontent {
+    padding: 10px 20px;
+}
+.modaltitle {
+    margin-bottom: 10px;
+}
+
+.modalbuttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.modalbuttons div {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
