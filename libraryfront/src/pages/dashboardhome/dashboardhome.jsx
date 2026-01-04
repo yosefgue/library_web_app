@@ -1,15 +1,100 @@
 import styles from "./dashboardhome.module.css";
-import { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useDisclosure } from '@mantine/hooks';
 import { Modal, Button, Text, ActionIcon } from '@mantine/core';
-import { IconSquarePlus, IconShoppingCart, IconHeartFilled, IconHeartPlus } from '@tabler/icons-react';
+import { IconSquarePlus, IconShoppingCart, IconHeartPlus, IconHeartMinus, IconSquareMinus, IconBook } from '@tabler/icons-react';
 
 export default function DashboardHome(){
-    const { userdata, booksdata } = useOutletContext();
+    const [booksdata, setBooksdata] = useState(null);
     const [opened, { open, close }] = useDisclosure(false);
     const [selectedbook, setSelectedBook] = useState(null);
-    const API_BASE = "http://localhost:8000/storage/";
+
+    async function handleBorrow(book) {
+    try {
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:8000/api/dashboard/borrow", {
+            method: "POST",
+            headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            },
+            body: JSON.stringify({
+            book_id: book.book_id,
+        }),
+        });
+
+        if (res.status === 401) {
+            localStorage.removeItem("token");
+            window.location.href = "/signin";
+            return;
+        }
+        if (!res.ok) throw new Error("Borrow failed");
+        close();
+        setSelectedBook(null);
+        console.log("Book borrowed");
+    } catch (err) {
+        console.error(err.message);
+        }
+    }
+    async function handleAddFavorite(book) {
+        try {
+            const token = localStorage.getItem("token");
+
+            const res = await fetch("http://localhost:8000/api/dashboard/favorites/add", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify({
+                book_id: book.book_id,
+            }),
+            });
+
+            if (res.status === 401) {
+            localStorage.removeItem("token");
+            window.location.href = "/signin";
+            return;
+            }
+
+            if (!res.ok) throw new Error("Favorite failed");
+
+            close();
+            setSelectedBook(null);
+            console.log("Added to favorites");
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    useEffect(() => {
+        async function fetchbooks() {
+            const token = localStorage.getItem("token");
+            try {
+                const res = await fetch("http://localhost:8000/api/dashboard/home", {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+            });
+            if (!res.ok) {
+                throw new Error("Unauthorized")
+            }
+            const data = await res.json();
+            setBooksdata(data);
+            } catch (err) {
+                console.error(err.message);
+                localStorage.removeItem("token");
+            }
+        }
+        fetchbooks();
+    }, []);
+
+    if (!booksdata) return null;
+
     const handleOpenBook = (book) => {
     setSelectedBook(book);
     open();
@@ -36,37 +121,18 @@ export default function DashboardHome(){
                     </div>
                 </div>
             </div>
-            <Modal opened={opened} onClose={() => { close(); setSelectedBook(null) }} title={<Text size="lg" fw={700}>{selectedbook?.title ?? "Title"}</Text>} size="lg" centered>
-                {selectedbook ? (
-                <div className={styles.modalcontainer}>
-                    <div className={styles.modalhead}>
-                        <div className={styles.imgcontainer}>
-                            <img src={`${API_BASE}${selectedbook.cover_path}`} alt="book popup" />
-
-                        </div>
-                        <div className={styles.modalcontent}>
-                            <p className={styles.modaltitle}><b>Author:</b> {selectedbook.author}</p>
-                            <h4>Description</h4>
-                            <p>{selectedbook.description}</p>
-                        </div>
-                    </div>
-                    <div className={styles.modalbuttons}>
-                        <div>
-                            <Button leftSection={<IconSquarePlus size={20} />} >Borrow</Button>
-                            <Button leftSection={<IconShoppingCart size={20} />} variant="default" >Buy Physical Copy</Button>
-                        </div>
-                        <ActionIcon variant="default" size="lg" > <IconHeartPlus/> </ActionIcon>
-                    </div>
-                </div>
-                ) : (
-                <p>No book selected</p>
-                )}
-            </Modal>
+            <BookModal
+            opened={opened}
+            onClose={() => { close(); setSelectedBook(null) }}
+            book={selectedbook}
+            onBorrow={handleBorrow}
+            onAddFavorite={handleAddFavorite}
+            />
         </>
     )
 }
 
-function Bookcard({ book, onOpen }) {
+export function Bookcard({ book, onOpen }) {
     const API_BASE = "http://localhost:8000/storage/";
     return (
         <div className={styles.bookcard} onClick={ onOpen }>
@@ -74,4 +140,63 @@ function Bookcard({ book, onOpen }) {
             <p>{book.title}</p>
         </div>
     )
+}
+
+export function BookModal({ opened, onClose, book, mode = "home", onBorrow, onUnborrow, onAddFavorite, onUnfavorite }) {
+    const API_BASE = "http://localhost:8000/storage/";
+  return (
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={<Text size="lg" fw={700}>{book?.title ?? "Title"}</Text>}
+      size="lg"
+      centered
+    >
+      {!book ? null : (
+        <div className={styles.modalcontainer}>
+            <div className={styles.modalhead}>
+                <div className={styles.imgcontainer}>
+                <img src={`${API_BASE}${book.cover_path}`} alt="book popup" />
+                </div>
+                <div className={styles.modalcontent}>
+                    <p className={styles.modaltitle}>
+                        <b>Author:</b> {book.author}
+                    </p>
+                    <h4>Description</h4>
+                    <p>{book.description}</p>
+                </div>
+            </div>
+
+          <div className={styles.modalbuttons}>
+            <div>
+                <Button
+                    onClick={() => onBorrow?.(book)}
+                    leftSection={mode === "borrow" ? <IconBook size={20} /> : <IconSquarePlus size={20} />}
+                    >
+                    {mode === "borrow" ? "Read" : "Borrow"}
+                </Button>
+                <Button
+                    leftSection={<IconShoppingCart size={20} />}
+                    variant="default"
+                >
+                    Buy Physical Copy
+                </Button>
+            </div>
+            <ActionIcon variant="default" size="lg"
+            onClick={() => {
+                if (mode === "borrow") onUnborrow(book);
+                if (mode === "favorite") onUnfavorite(book);
+                if (mode === "home") onAddFavorite(book);
+            }}
+            >
+                {mode === "borrow" && <IconSquareMinus/>}
+                {mode === "favorite" && <IconHeartMinus />}
+                {mode === "home" && <IconHeartPlus />}
+            </ActionIcon>
+          </div>
+        </div>
+      )
+      }
+    </Modal>
+  );
 }

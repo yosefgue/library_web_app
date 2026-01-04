@@ -4,9 +4,25 @@ import { TextInput, Button, Anchor } from '@mantine/core';
 import { Link } from "react-router-dom";
 
 export default function Home(){
+    
     return (
         <div className={styles.parent}>
             <Header />
+            <div className={styles.main}>
+                <div className={styles.herosection}>
+                    <div className={styles.heroleft}>
+                        <div>
+                            <h1 className={styles.herotitle}>Discover Your Next Favorite Book</h1>
+                            <p className={styles.herosubtitle}>Explore a world of stories, ideas, and knowledge all in one place. From bestselling novels to inspiring nonfiction, our collection is carefully selected to help you find the perfect book for every moment.</p>
+                        </div>
+                        <Button component={Link} to="/signup" className={styles.herobutton} variant="filled">Get Started</Button>
+                    </div>
+                    <div className={styles.heroright}>
+                        <img src="/hero.jpg" alt="hero"/>
+                    </div>
+                </div>
+
+            </div>
         </div>
     )
 }

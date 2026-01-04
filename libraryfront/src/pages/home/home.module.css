@@ -3,13 +3,11 @@
     flex-direction: column;
     height: 100%;
     width: 100%;
-    /* border: 5px solid black; */
 }
 
 .logo {
     height: 55px;
     margin: 10px;
-    /* border: solid black 2px; */
 }
 .header {
     display: flex;
@@ -18,7 +16,6 @@
     gap: 20px;
     position: sticky;
     height: 55px;
-    /* border: solid black 2px; */
     margin: 10px 20px;
     align-items: center;
 }
@@ -26,7 +23,6 @@
     gap: 15px;
     max-width: 500px;
     width: 100%;
-    /* border: solid black 2px; */
 }
 .leftsection {
     display: flex;
@@ -35,11 +31,44 @@
     max-width: 700px;
     height: 55px;
     width: 100%;
-    /* border: 2px solid black; */
 }
 
 .rightsection {
     display: flex;
     align-items: center;
     gap: 15px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+}
+.herosection {
+    padding: 50px 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 50px;
+    width: 100%;
+    background-color: #e9ecf5;
+    border-radius: 20px;
+}
+.heroright img {
+    height: 300px;
+}
+.heroleft {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 550px;
+    gap: 20px;
+}
+.heroleft div {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.herobutton {
+    width: 150px;
 }

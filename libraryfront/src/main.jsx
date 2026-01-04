@@ -12,6 +12,10 @@ import Plan from './pages/plan/plan.jsx'
 import AppLayout from './applayout.jsx';
 import ProtectedRoute from './protected.jsx'
 import DashboardHome from './pages/dashboardhome/dashboardhome.jsx';
+import MyBooks from './pages/dashboardmybooks/mybooks.jsx';
+import Favorites from './pages/dashboardfavorites/favorites.jsx';
+import SearchPage from './pages/dashboardsearch/search.jsx';
+
 
 
 let router = createBrowserRouter([
@@ -26,7 +30,10 @@ let router = createBrowserRouter([
       {
         element: <AppLayout />,
         children: [
-          {index: true, element: <DashboardHome/>},
+          {index: true, element: <DashboardHome />},
+          {path: "mybooks", element: <MyBooks />},
+          {path: "favorites", element: <Favorites />},
+          {path: "search", element: <SearchPage />}
         ]
       }
     ]

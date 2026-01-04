@@ -1,12 +1,14 @@
 import styles from "./signin.module.css"
-import { Button, Group, TextInput, PasswordInput, Anchor, ActionIcon } from '@mantine/core';
+import { Button, Group, TextInput, PasswordInput, Anchor, ActionIcon, LoadingOverlay, Box } from '@mantine/core';
 import { IconLogin2, IconArrowLeft } from '@tabler/icons-react';
 import { isNotEmpty, useForm } from '@mantine/form';
 import { Link, useNavigate } from "react-router-dom";
+import { useDisclosure } from '@mantine/hooks';
 
 
 export default function Signin(){
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [visible, { open, close }] = useDisclosure(false);
     const form = useForm({
     mode: 'uncontrolled',
     initialValues: {
@@ -21,6 +23,7 @@ export default function Signin(){
     });
 
     async function handleSignin(values){
+        open();
         try {
             const res = await fetch("http://localhost:8000/api/signin", {
                 method: "POST",
@@ -42,6 +45,8 @@ export default function Signin(){
 
         } catch(err) {
             console.error(err.message);
+        } finally {
+            close();
         }
     }
 
@@ -51,6 +56,7 @@ export default function Signin(){
                 <IconArrowLeft style={{ width: '70%', height: '70%' }} stroke={1.5} />
             </ActionIcon>
             <form onSubmit={form.onSubmit(handleSignin)} className={styles.form}>
+                <LoadingOverlay visible={visible} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }}/>
                 <div className={styles.head}>
                     <IconLogin2 size={45}/>
                     <h1>Sign in</h1>
