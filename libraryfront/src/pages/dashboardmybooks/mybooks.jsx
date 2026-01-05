@@ -77,6 +77,7 @@ export default function MyBooks(){
             src="/nobooks.png"
             alt="No borrowed books"
             className={styles.emptyImage}
+            loading="lazy"
             />
             <h2>No borrowed books</h2>
             <p>Browse the library and borrow your first book</p>

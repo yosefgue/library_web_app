@@ -1,8 +1,9 @@
 import styles from './applayout.module.css'
 import { Outlet, useOutletContext, useNavigate, useLocation } from "react-router-dom";
 import { useState } from 'react';
-import { NavLink, Box, TextInput, Avatar } from '@mantine/core';
-import { IconSearch, IconBooks, IconHeart, IconClipboardText, IconHome, IconLogout2, IconCategory } from '@tabler/icons-react';
+import { useDisclosure } from '@mantine/hooks';
+import { NavLink, Box, TextInput, Avatar, ActionIcon } from '@mantine/core';
+import { IconSearch, IconBooks, IconHeart, IconClipboardText, IconHome, IconLogout2, IconCategory, IconStar, IconStarFilled, IconShoppingCart } from '@tabler/icons-react';
 
 const data = [
   { icon: IconHome, label: 'Home', href: '/dashboard' },
@@ -17,6 +18,9 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [query, setQuery] = useState("");
+  const [loading, { open, close }] = useDisclosure();
+
+  const is_premium = ctx?.userdata?.is_premium;
 
   const navlinks = data.map((item, index) => (
     <NavLink
@@ -42,10 +46,60 @@ export default function AppLayout() {
     navigate(`/dashboard/search?q=${encodeURIComponent(keyword)}`);
   };
 
+  const handleUpgradePremium = async () => {
+    open();
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("/api/dashboard/premium/upgrade", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upgrade failed");
+
+      localStorage.setItem("token", data.token);
+
+      navigate(0);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      close();
+    }
+  };
+
+  const handleRemovePremium = async () => {
+    open();
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("/api/dashboard/premium/remove", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Remove premium failed");
+
+      localStorage.setItem("token", data.token);
+
+      navigate(0);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      close();
+    }
+  };
+
   return (
     <div className={styles.parent}>
       <div className={styles.sidebar}>
-        <a href="/"><img className={styles.logo} src="/logo.svg" alt="logo"/></a>
+        <a href="/"><img className={styles.logo} src="/logo.svg" alt="logo" loading="lazy"/></a>
 
         <Box w={225}>
           {navlinks}
@@ -74,10 +128,21 @@ export default function AppLayout() {
               />
             </form>
           </div>
-
-          <div className={styles.useravatar}>
-            <Avatar src="/penguin.png" alt="user avatar" />
-            <p>{ctx?.userdata?.username}</p>
+          <div className={styles.rightheader}>
+            <ActionIcon size={30} variant="subtle" color="blue" >
+              <IconShoppingCart size={22} stroke={1.5} />
+            </ActionIcon>
+            <ActionIcon
+              loading={loading}
+              size={30} variant="subtle" color="yellow" 
+              onClick={is_premium ? handleRemovePremium : handleUpgradePremium}
+             >
+              {is_premium ? <IconStarFilled size={22} stroke={1.7} /> : <IconStar size={22} stroke={1.7} />}
+            </ActionIcon>
+            <div className={styles.useravatar}>
+              <Avatar src="/penguin.png" alt="user avatar" />
+              <p>{ctx?.userdata?.username}</p>
+            </div>
           </div>
         </div>
 

@@ -1,8 +1,9 @@
 import styles from "./dashboardhome.module.css";
 import { useEffect, useState } from "react";
 import { useDisclosure } from '@mantine/hooks';
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { Modal, Button, Text, ActionIcon } from '@mantine/core';
-import { IconSquarePlus, IconShoppingCart, IconHeartPlus, IconHeartMinus, IconSquareMinus, IconBook } from '@tabler/icons-react';
+import { IconSquarePlus, IconShoppingCart, IconHeartPlus, IconHeartMinus, IconSquareMinus, IconBook, IconStarFilled } from '@tabler/icons-react';
 
 export default function DashboardHome(){
     const [booksdata, setBooksdata] = useState(null);
@@ -136,7 +137,7 @@ export function Bookcard({ book, onOpen }) {
     const API_BASE = "http://localhost:8000/storage/";
     return (
         <div className={styles.bookcard} onClick={ onOpen }>
-            <img src={`${API_BASE}${book.cover_path}`} alt={`${book.title}`}/>
+            <img src={`${API_BASE}${book.cover_path}`} alt={`${book.title}`} loading="lazy"/>
             <p>{book.title}</p>
         </div>
     )
@@ -144,6 +145,29 @@ export function Bookcard({ book, onOpen }) {
 
 export function BookModal({ opened, onClose, book, mode = "home", onBorrow, onUnborrow, onAddFavorite, onUnfavorite }) {
     const API_BASE = "http://localhost:8000/storage/";
+    const navigate = useNavigate();
+    const ctx = useOutletContext();
+    const isPremiumUser = !!ctx?.userdata?.is_premium;
+    const bookIsPremium = !!book?.is_premium;
+
+    const showPremiumCta = mode !== "borrow" && bookIsPremium && !isPremiumUser;
+
+    let primaryIcon;
+    if (mode === "borrow") {
+        primaryIcon = <IconBook size={20} />;
+    } else if (showPremiumCta) {
+        primaryIcon = <IconStarFilled size={20} />;
+    } else {
+        primaryIcon = <IconSquarePlus size={20} />;
+    }
+
+    const primaryLabel =
+        mode === "borrow"
+            ? "Read"
+            : showPremiumCta
+                ? "Become Premium"
+                : "Borrow";
+
   return (
     <Modal
       opened={opened}
@@ -156,7 +180,7 @@ export function BookModal({ opened, onClose, book, mode = "home", onBorrow, onUn
         <div className={styles.modalcontainer}>
             <div className={styles.modalhead}>
                 <div className={styles.imgcontainer}>
-                <img src={`${API_BASE}${book.cover_path}`} alt="book popup" />
+                <img src={`${API_BASE}${book.cover_path}`} alt="book popup" loading="lazy"/>
                 </div>
                 <div className={styles.modalcontent}>
                     <p className={styles.modaltitle}>
@@ -167,33 +191,49 @@ export function BookModal({ opened, onClose, book, mode = "home", onBorrow, onUn
                 </div>
             </div>
 
-          <div className={styles.modalbuttons}>
-            <div>
-                <Button
-                    onClick={() => onBorrow?.(book)}
-                    leftSection={mode === "borrow" ? <IconBook size={20} /> : <IconSquarePlus size={20} />}
-                    >
-                    {mode === "borrow" ? "Read" : "Borrow"}
-                </Button>
-                <Button
-                    leftSection={<IconShoppingCart size={20} />}
-                    variant="default"
-                >
-                    Buy Physical Copy
-                </Button>
+          {mode !== "visitor" && (
+            <div className={styles.modalbuttons}>
+              <div>
+                  <Button
+                      onClick={() => {
+                          if (mode === "borrow") {
+                              onClose?.();
+                              navigate("/dashboard/read");
+                              return;
+                          }
+                          // For premium books, free users shouldn't borrow from the UI.
+                          if (bookIsPremium && !isPremiumUser) {
+                              return;
+                          }
+                          onBorrow?.(book);
+                      }}
+                      leftSection={primaryIcon}
+                      color={showPremiumCta ? "yellow" : undefined}
+                      >
+                      {primaryLabel}
+                  </Button>
+                  <Button
+                      leftSection={<IconShoppingCart size={20} />}
+                      variant="default"
+                  >
+                      Buy Physical Copy
+                  </Button>
+              </div>
+              <ActionIcon
+                variant="default"
+                size="lg"
+                onClick={() => {
+                    if (mode === "borrow") onUnborrow?.(book);
+                    if (mode === "favorite") onUnfavorite?.(book);
+                    if (mode === "home") onAddFavorite?.(book);
+                }}
+              >
+                  {mode === "borrow" && <IconSquareMinus/>}
+                  {mode === "favorite" && <IconHeartMinus />}
+                  {mode === "home" && <IconHeartPlus />}
+              </ActionIcon>
             </div>
-            <ActionIcon variant="default" size="lg"
-            onClick={() => {
-                if (mode === "borrow") onUnborrow(book);
-                if (mode === "favorite") onUnfavorite(book);
-                if (mode === "home") onAddFavorite(book);
-            }}
-            >
-                {mode === "borrow" && <IconSquareMinus/>}
-                {mode === "favorite" && <IconHeartMinus />}
-                {mode === "home" && <IconHeartPlus />}
-            </ActionIcon>
-          </div>
+          )}
         </div>
       )
       }

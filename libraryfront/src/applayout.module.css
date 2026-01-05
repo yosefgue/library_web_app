@@ -58,3 +58,9 @@
     overflow: auto;
     padding: 20px 30px;
 }
+.rightheader {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+}

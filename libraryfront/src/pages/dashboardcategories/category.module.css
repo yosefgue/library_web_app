@@ -1,0 +1,16 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 20px;
+    height: 100%;
+    width: 100%;
+}
+.books {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    gap: 40px;
+}
