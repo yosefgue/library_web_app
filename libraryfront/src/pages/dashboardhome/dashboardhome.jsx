@@ -135,12 +135,20 @@ export default function DashboardHome(){
 
 export function Bookcard({ book, onOpen }) {
     const API_BASE = "http://localhost:8000/storage/";
+    const ctx = useOutletContext();
+    const isPremiumUser = !!ctx?.userdata?.is_premium;
+    const bookIsPremium = !!book?.is_premium;
+    const showFreeBadge = !isPremiumUser && !bookIsPremium;
+
     return (
-        <div className={styles.bookcard} onClick={ onOpen }>
-            <img src={`${API_BASE}${book.cover_path}`} alt={`${book.title}`} loading="lazy"/>
+        <div className={styles.bookcard} onClick={onOpen}>
+            <div className={styles.bookcardimgwrapper}>
+                <img src={`${API_BASE}${book.cover_path}`} alt={`${book.title}`} loading="lazy" />
+                {showFreeBadge && <span className={styles.freebadge}>Free</span>}
+            </div>
             <p>{book.title}</p>
         </div>
-    )
+    );
 }
 
 export function BookModal({ opened, onClose, book, mode = "home", onBorrow, onUnborrow, onAddFavorite, onUnfavorite }) {

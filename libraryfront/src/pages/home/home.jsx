@@ -6,7 +6,6 @@ import { TextInput, Button, Anchor } from '@mantine/core';
 import { Link, useNavigate } from "react-router-dom";
 
 export function Home(){
-    
     return (
         <div className={styles.parent}>
             <Header />
@@ -26,7 +25,7 @@ function Header(){
         const keyword = q.trim();
         if (!keyword) return;
         navigate(`/search?q=${encodeURIComponent(keyword)}`);
-  };
+    };
     return (
         <div className={styles.header}>
             <div className={styles.leftsection}>
